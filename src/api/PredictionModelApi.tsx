@@ -2,7 +2,7 @@ import { useMutation } from "@tanstack/react-query";
 import { toast } from "sonner";
 
 const usePredictionModel = () => {
-  const modelApiEndpoint = "";
+  const modelApiEndpoint = import.meta.env.MODLE_API_END_POINT;
   const modelApiRequest = async (userFormData: FormData): Promise<any> => {
     const response = await fetch(modelApiEndpoint, {
       method: "POST",
