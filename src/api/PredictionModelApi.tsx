@@ -3,7 +3,7 @@ import { toast } from "sonner";
 
 const usePredictionModel = () => {
   const modelApiEndpoint = import.meta.env.MODLE_API_END_POINT;
-  const modelApiRequest = async (userFormData: FormData): Promise<any> => {
+  const modelApiRequest = async (userFormData: FormData): Promise<boolean> => {
     const response = await fetch(modelApiEndpoint, {
       method: "POST",
       body: userFormData,

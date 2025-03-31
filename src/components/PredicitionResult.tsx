@@ -1,5 +1,5 @@
 type Prop = {
-  predictionData: any;
+  predictionData: boolean;
 };
 
 const PredicitionResult = ({ predictionData }: Prop) => {
@@ -10,8 +10,7 @@ const PredicitionResult = ({ predictionData }: Prop) => {
           Result:
         </h1>
         <p className=" text-blue-500">
-          You are <span className="font-bold">{predictionData}</span>%
-          vulnerable to Heart Disease (Cardio Vascular Disease).
+          Our Model predicts you {!predictionData && "don't"} have a heart disease;
         </p>
       </div>
     </div>

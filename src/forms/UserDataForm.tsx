@@ -15,7 +15,6 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { LoadingButton } from "@/components";
 
 const formSchema = z.object({
-  gender: z.enum(["M", "F"]),
   age: z.preprocess(
     (value) => (value === "" ? undefined : Number(value)),
     z.number({
@@ -23,27 +22,52 @@ const formSchema = z.object({
       invalid_type_error: "Must be a valid number.",
     })
   ),
-  bpLow: z.preprocess(
+  sex: z.enum(["M", "F"]),
+  chestPainType: z.enum(["ATA", "NAP", "ASY"]),
+  restingBP: z.preprocess(
     (value) => (value === "" ? undefined : Number(value)),
     z.number({
-      required_error: "BP Low is required.",
+      required_error: "Resting BP is required.",
       invalid_type_error: "Must be a valid number.",
     })
   ),
-  bpHigh: z.preprocess(
+  cholestrol: z.preprocess(
     (value) => (value === "" ? undefined : Number(value)),
     z.number({
-      required_error: "BP High is required.",
+      required_error: "Cholestrol value is required.",
       invalid_type_error: "Must be a valid number.",
     })
   ),
-  heartRate: z.preprocess(
+  fastingBS: z.preprocess(
     (value) => (value === "" ? undefined : Number(value)),
     z.number({
-      required_error: "Heart Rate is required.",
+      required_error: "Fasting Blood Square level is required.",
       invalid_type_error: "Must be a valid number.",
     })
   ),
+  restingECG: z.preprocess(
+    (value) => (value === "" ? undefined : Number(value)),
+    z.number({
+      required_error: "Resting ECG value is required.",
+      invalid_type_error: "Must be a valid number.",
+    })
+  ),
+  maxHR: z.preprocess(
+    (value) => (value === "" ? undefined : Number(value)),
+    z.number({
+      required_error: "Max Heart Rate is required.",
+      invalid_type_error: "Must be a valid number.",
+    })
+  ),
+  exerciseAngina: z.enum(["Y", "N"]),
+  oldPeak: z.preprocess(
+    (value) => (value === "" ? undefined : Number(value)),
+    z.number({
+      required_error: "Old Peak value is required.",
+      invalid_type_error: "Must be a valid number.",
+    })
+  ),
+  stSlope: z.enum(["Flat", "Up"]),
 });
 
 type formType = z.infer<typeof formSchema>;
@@ -61,11 +85,16 @@ const UserDataForm = ({ predict, isLoading }: Prop) => {
   const onSubmit = (formDataJson: formType) => {
     const formData = new FormData();
     formData.append("age", formDataJson.age.toString());
-    formData.append("gender", formDataJson.gender);
-    formData.append("bpLow", formDataJson.bpLow.toString());
-    formData.append("bpHigh", formDataJson.bpHigh.toString());
-    formData.append("heartRate", formDataJson.heartRate.toString());
-
+    formData.append("sex", formDataJson.sex);
+    formData.append("chestPainType", formDataJson.chestPainType);
+    formData.append("cholestrol", formDataJson.cholestrol.toString());
+    formData.append("restingBP", formDataJson.restingBP.toString());
+    formData.append("fastingBS", formDataJson.fastingBS.toString());
+    formData.append("restingECG", formDataJson.restingECG.toString());
+    formData.append("maxHR", formDataJson.maxHR.toString());
+    formData.append("oldPeak", formDataJson.oldPeak.toString());
+    formData.append("stSlope", formDataJson.stSlope);
+    console.log(formData.values);
     predict(formData);
   };
 
@@ -75,13 +104,13 @@ const UserDataForm = ({ predict, isLoading }: Prop) => {
         Enter your details:{" "}
       </h1>
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)}>
+        <form onSubmit={form.handleSubmit(onSubmit)} className="md:w-sm">
           <FormField
             control={form.control}
             name="age"
             render={({ field }) => (
               <FormItem>
-                <FormLabel className="text-xl text-blue-500 mt-3">
+                <FormLabel className="text-xl text-blue-500 mt-5">
                   Age
                 </FormLabel>
                 <FormControl>
@@ -94,11 +123,11 @@ const UserDataForm = ({ predict, isLoading }: Prop) => {
 
           <FormField
             control={form.control}
-            name="gender"
+            name="sex"
             render={({ field }) => (
               <FormItem>
-                <FormLabel className="text-xl text-blue-500 mt-3">
-                  Gender
+                <FormLabel className="text-xl text-blue-500 mt-5">
+                  Sex
                 </FormLabel>
                 <FormControl>
                   <RadioGroup
@@ -127,11 +156,52 @@ const UserDataForm = ({ predict, isLoading }: Prop) => {
 
           <FormField
             control={form.control}
-            name="heartRate"
+            name="chestPainType"
             render={({ field }) => (
               <FormItem>
-                <FormLabel className="text-xl text-blue-500 mt-3">
-                  Heart Rate
+                <FormLabel className="text-xl text-blue-500 mt-5">
+                  Chest Pain Type
+                </FormLabel>
+                <FormControl>
+                  <RadioGroup
+                    className="flex gap-4 mt-2"
+                    value={field.value}
+                    onValueChange={field.onChange}
+                  >
+                    <div className="flex items-center gap-2">
+                      <RadioGroupItem id="ATA" value="ATA" />
+                      <FormLabel htmlFor="ATA" className="text-blue-500">
+                        ATA
+                      </FormLabel>
+                    </div>
+
+                    <div className="flex items-center gap-2">
+                      <RadioGroupItem id="NAP" value="NAP" />
+                      <FormLabel htmlFor="NAP" className="text-blue-500">
+                        NAP
+                      </FormLabel>
+                    </div>
+
+                    <div className="flex items-center gap-2">
+                      <RadioGroupItem id="ASY" value="ASY" />
+                      <FormLabel htmlFor="ASY" className="text-blue-500">
+                        ASY
+                      </FormLabel>
+                    </div>
+                  </RadioGroup>
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="restingBP"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel className="text-xl text-blue-500 mt-5">
+                  Resting BP
                 </FormLabel>
                 <FormControl>
                   <Input {...field} />
@@ -141,38 +211,151 @@ const UserDataForm = ({ predict, isLoading }: Prop) => {
             )}
           />
 
-          <div className="flex flex-col md:flex-row gap-4 mt-3">
-            <FormField
-              control={form.control}
-              name="bpLow"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel className="text-xl text-blue-500">
-                    BP Low
-                  </FormLabel>
-                  <FormControl>
-                    <Input {...field} placeholder="80" />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="bpHigh"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel className="text-xl text-blue-500">
-                    BP High
-                  </FormLabel>
-                  <FormControl>
-                    <Input {...field} placeholder="120" />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-          </div>
+          <FormField
+            control={form.control}
+            name="cholestrol"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel className="text-xl text-blue-500 mt-5">
+                  Cholesterol
+                </FormLabel>
+                <FormControl>
+                  <Input {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="fastingBS"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel className="text-xl text-blue-500 mt-5">
+                  Fasting BS
+                </FormLabel>
+                <FormControl>
+                  <Input {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="restingECG"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel className="text-xl text-blue-500 mt-5">
+                  Resting ECG
+                </FormLabel>
+                <FormControl>
+                  <Input {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="maxHR"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel className="text-xl text-blue-500 mt-5">
+                  Max Heart Rate
+                </FormLabel>
+                <FormControl>
+                  <Input {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="exerciseAngina"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel className="text-xl text-blue-500 mt-5">
+                  Exercise Angina
+                </FormLabel>
+                <FormControl>
+                  <RadioGroup
+                    className="flex gap-4 mt-2"
+                    value={field.value}
+                    onValueChange={field.onChange}
+                  >
+                    <div className="flex items-center gap-2">
+                      <RadioGroupItem id="yes" value="Y" />
+                      <FormLabel htmlFor="yes" className="text-blue-500">
+                        Yes
+                      </FormLabel>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <RadioGroupItem id="no" value="N" />
+                      <FormLabel htmlFor="no" className="text-blue-500">
+                        No
+                      </FormLabel>
+                    </div>
+                  </RadioGroup>
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="oldPeak"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel className="text-xl text-blue-500 mt-5">
+                  Old Peak
+                </FormLabel>
+                <FormControl>
+                  <Input {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="stSlope"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel className="text-xl text-blue-500 mt-5">
+                  Exercise Angina
+                </FormLabel>
+                <FormControl>
+                  <RadioGroup
+                    className="flex gap-4 mt-2"
+                    value={field.value}
+                    onValueChange={field.onChange}
+                  >
+                    <div className="flex items-center gap-2">
+                      <RadioGroupItem id="Up" value="Up" />
+                      <FormLabel htmlFor="Up" className="text-blue-500">
+                        Up
+                      </FormLabel>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <RadioGroupItem id="Flat" value="Flat" />
+                      <FormLabel htmlFor="Flat" className="text-blue-500">
+                        Flat
+                      </FormLabel>
+                    </div>
+                  </RadioGroup>
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
 
           <div className="flex mt-6 ">
             {isLoading ? (
