@@ -8,7 +8,6 @@ const HomePage = () => {
     <>
       <UserDataForm predict={predict} isLoading={isPending} />
       {predictionData && <PredicitionResult predictionData={predictionData} />}
-      <PredicitionResult predictionData={90} />
     </>
   );
 };

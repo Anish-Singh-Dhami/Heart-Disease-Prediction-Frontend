@@ -11,7 +11,7 @@ const PredicitionResult = ({ predictionData }: Prop) => {
         </h1>
         <p className=" text-blue-500">
           You are <span className="font-bold">{predictionData}</span>%
-          vulnerable to Heart Disease(Cardio Vascular Disease).
+          vulnerable to Heart Disease (Cardio Vascular Disease).
         </p>
       </div>
     </div>
