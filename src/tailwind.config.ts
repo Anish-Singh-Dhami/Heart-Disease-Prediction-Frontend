@@ -1,0 +1,1 @@
+// Empty file just to allow tailwind css intellisense to work (provide autocomplete feature and much more)
